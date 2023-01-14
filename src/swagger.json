@@ -1,0 +1,42 @@
+{
+    "openapi":"3.0.1", 
+    "info":{
+        "title":"WebScraping IN8", 
+        "description":"web scraping from e commerce", 
+        "version":"1.0.0"
+    }, 
+    "basePath":"/",
+    "paths":{
+
+        "/notebook":{
+       
+            "get":{
+                "tags":["Notebook"],
+                "responses":{
+                    "200":{
+                        "description":"Notebook listed"
+                    }
+                }
+            }
+        },
+        "/notebook/{brand}":{
+            "get":{
+                "tags":["Notebook"],
+                "parameters":[
+
+                  {  
+                    "in":"path", 
+                    "name":"brand", 
+                    "type":"string", 
+                    "required":true
+                 }
+                ], 
+                "responses":{
+                    "200":{
+                        "description":"Brands listed"
+                    }
+                }
+            }
+        }
+    }
+}

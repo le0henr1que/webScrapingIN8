@@ -3,6 +3,7 @@ import { IBrandRepository  } from "../../repositories/ListBrandNotebook/IBrandLi
 
 export class ListBrand{
 
+
     constructor(
         private brandRepositoryList: IBrandRepository
     ){}
