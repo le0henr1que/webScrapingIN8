@@ -43,7 +43,9 @@ http://localhost:5000/api-docs/#/
 
 
 ## 🎁 Feature
-- Criar mais filtros de listagem
+- Criar mais filtros de listagem;
+- Testes Unitários;
+
 
 
 
