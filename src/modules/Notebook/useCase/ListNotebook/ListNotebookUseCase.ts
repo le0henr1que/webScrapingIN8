@@ -7,8 +7,9 @@ export class ListNotebook{
         private notebookRepositoryList: INotebookRepository
     ){}
 
-    async execute(){
-        const notebook = await this.notebookRepositoryList.ListNotebook()
+    async execute(brand:string){
+        const notebook = await this.notebookRepositoryList.ListNotebook(brand)
+        
         return notebook
     }
 }

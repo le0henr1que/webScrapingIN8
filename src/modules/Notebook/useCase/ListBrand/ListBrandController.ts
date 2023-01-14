@@ -1,20 +1,18 @@
 import { Response, Request } from "express";
-import { ListNotebook } from "./ListNotebookUseCase";
+import { ListBrand } from "./ListBrandUseCase";
 
-export class ListNotebookController {
+export class ListBrandController {
 
     constructor(
-        private listNotebookUseCase: ListNotebook,
+        private listNotebookUseCase: ListBrand,
     ){}
 
-    async handle(response:Response, request:Request): Promise<Response>{
+    async handle(response:Response): Promise<Response>{
 
         try{
-            const notebook = await this.listNotebookUseCase.execute(request.params.brand)
-
-            
-
-            return response.status(200).json({notebook})
+            const brand = await this.listNotebookUseCase.execute()
+          
+            return response.status(200).json({brand})
 
         }catch(err){
             console.log(err)

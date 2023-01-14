@@ -3,16 +3,20 @@ import { INotebookRepository } from "..//INotebookList";
 import puppeteer from 'puppeteer';
 
 export class PuppeteerNotebookRepositoryList implements INotebookRepository{
-    async ListNotebook(): Promise<Notebook> {
+    async ListNotebook(brand:string): Promise<Notebook> {
 
-        const browser = await puppeteer.launch({headless: false});
+        const browser = await puppeteer.launch({headless: true});
         const page = await browser.newPage();
       
         await page.goto('https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops');
-      
-        // Type into search box.
+        
+        var notebook:any = [];
+
+
         const images = await page.$$eval('.thumbnail img', el => el.map(link => link.src));
-        // console.log(images);
+        // console.log(notebook)
+        const description = await page.$$eval('.description', el => el.map(title => title.textContent));
+        // console.log(description)
 
         const title = await page.$$eval('.title', el => el.map(title => title.textContent));
         // console.log(title);
@@ -20,7 +24,6 @@ export class PuppeteerNotebookRepositoryList implements INotebookRepository{
         const price = await page.$$eval('.pull-right.price', el => el.map(title => title.textContent));
         // console.log(price);
 
-        const description = await page.$$eval('.description', el => el.map(title => title.textContent));
         // console.log(description);
       
         const reviews = await page.$$eval('div.ratings p.pull-right', el => el.map(title => title.textContent));
@@ -29,45 +32,74 @@ export class PuppeteerNotebookRepositoryList implements INotebookRepository{
         const href = await page.$$eval('a.title', el => el.map(href => href.href));
         // console.log(href)
 
-        href.map( async (item) => {
-            
-  
-            await page.goto(item)
-            await page.waitForSelector('.btn-primary')
-  
     
-            const amountMemory = await page.$$eval('.btn-primary', el => el.map(title => title.textContent));
-            console.log(amountMemory);
 
+        var memoryTypes = ["SSD", "HDD", "HD"];
+        var operationalSystem = ["Windows", "Linux", "Windows 10", "Windows 10 Pro", "Windows 10 Home", "Windows 8.1", "Win7 Pro", "Win7"];
+        var amountMemory = ["128GB", "32GB", "500GB", "1TB", "750GB"];
+
+        description.map((item, index) => {
+            var brand = item?.split(" ")[0];
+            var model = item?.split(" ")[1];
+            var memoryType = "Não Informado";
+            var oSystem = "Não Informado";
+            var amountMemorys = "Não Informado";
+            
+            var priceConvert:any = price[index]?.replaceAll("$", "");
+            var reviAmount:any = reviews[index]?.replaceAll(" reviews", "");
+
+        //    console.log(parseFloat(priceConvert))
+
+            memoryTypes.map((memory:any) => {
+                if(item?.includes(memory)){
+                    memoryType = memory
+                }
+            })
+            operationalSystem.map((operationalSystem:any) => {
+                if(item?.includes(operationalSystem)){
+                    oSystem = operationalSystem
+                }
+            })
+            amountMemory.map((amountMemory:any) => {
+                if(item?.includes(amountMemory)){
+                    amountMemorys = amountMemory
+                }
+            })
+
+            
+     
+
+            notebook.push({
+                brand:brand, 
+                model:model, 
+                description:description[index], 
+                memoryType:memoryType, 
+                operationalSystem:oSystem, 
+                reviews:parseInt(reviAmount), 
+                price:parseFloat(priceConvert), 
+                memoryAmount:amountMemorys, 
+                link:{
+                    image:images[index],
+                    link:href[index]
+                },
+ 
+             
+            })
+       
         })
+    
 
-        // await page.type('.devsite-search-field', 'Headless Chrome');
-      
-        // // Wait for suggest overlay to appear and click "show all results".
-        // const allResultsSelector = '.devsite-suggest-all-results';
-        // await page.waitForSelector(allResultsSelector);
-        // await page.click(allResultsSelector);
-      
-        // // Wait for the results page to load and display the results.
-        // const resultsSelector = '.gsc-results .gs-title';
-        // await page.waitForSelector(resultsSelector);
-      
-      
         await browser.close();
             
-        const notebook = {
-                type:"Teste", 
-                price:1212, 
-                brand: "Teste", 
-                model:"Teste", 
-                description:"Teste", 
-                memoryType:"Teste", 
-                memoryAmount:120, 
-                reviews:12, 
-                image:"Teste"
-            }
-        
-            return notebook;
+
+        notebook = await notebook.filter((item:Notebook) => item.brand == brand);
+
+        notebook = await notebook.sort((itemA: { price: number; }, itemB: { price: number; }) => itemB.price + itemA.price);
+
+
+
+
+        return notebook;
 
     }
 }

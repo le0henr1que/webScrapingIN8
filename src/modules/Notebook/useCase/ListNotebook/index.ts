@@ -1,6 +1,6 @@
 import * as Puppeteer  from "../../repositories/ListNotebook/implementation/PuppeteerNotebookRepositoryList";
 
-import { ListAllCarController } from "./ListNotebookController";
+import { ListNotebookController } from "./ListNotebookController";
 import { ListNotebook } from "./ListNotebookUseCase";
 
 const PuppeteerNotebookRepository = new Puppeteer.PuppeteerNotebookRepositoryList()
@@ -10,8 +10,8 @@ const listNotebook = new ListNotebook(
     PuppeteerNotebookRepository
 )
 
-const listAllCarController = new ListAllCarController(
+const listnotebookController = new ListNotebookController(
     listNotebook
 )
 
-export {listNotebook, listAllCarController}
+export {listNotebook, listnotebookController}
